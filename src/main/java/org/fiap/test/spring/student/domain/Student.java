@@ -13,11 +13,11 @@ public class Student {
     @Column(nullable = false, length = 50)
     private String name;
 
-    @Column(nullable = false, length = 10)
-    private String subscription;
+    @Column(nullable = false, length = 7)
+    private Integer subscription;
 
-    @Column(nullable = false, length = 10)
-    private String code;
+    @Column(nullable = false, length = 5)
+    private Integer code;
 
     public Student() {
     }
@@ -36,11 +36,11 @@ public class Student {
         }
 
         this.name = name;
-        this.subscription = lineContent.substring(41, 48);
-        this.code = lineContent.substring(49, 55);
+        this.subscription = Integer.valueOf(lineContent.substring(41, 48));
+        this.code = Integer.valueOf(lineContent.substring(49, 55).replaceAll("-", ""));
     }
 
-    public Student(String name, String subscription, String code) {
+    public Student(String name, Integer subscription, Integer code) {
         this.name = name;
         this.subscription = subscription;
         this.code = code;
@@ -82,19 +82,19 @@ public class Student {
         this.name = name;
     }
 
-    public String getSubscription() {
+    public Integer getSubscription() {
         return subscription;
     }
 
-    public void setSubscription(String subscription) {
+    public void setSubscription(Integer subscription) {
         this.subscription = subscription;
     }
 
-    public String getCode() {
+    public Integer getCode() {
         return code;
     }
 
-    public void setCode(String code) {
+    public void setCode(Integer code) {
         this.code = code;
     }
 }

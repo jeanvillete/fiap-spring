@@ -24,10 +24,10 @@ public class StudentTest {
     public void check_for_valid_input() {
         Student instantiatedStudent = new Student(
                 "ZELIA MERBACH GOMES SOMEKH",
-                "2289737",
-                "195-41"
+                9999999,
+                99999
         );
-        Student parsedStudent = new Student("ZELIA MERBACH GOMES SOMEKH               2289737 195-41");
+        Student parsedStudent = new Student("ZELIA MERBACH GOMES SOMEKH               9999999 999-99");
 
         Assertions.assertThat(parsedStudent).isEqualTo(instantiatedStudent);
     }

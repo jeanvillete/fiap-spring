@@ -1,26 +1,27 @@
 CREATE TABLE STUDENT (
-  id integer NOT NULL AUTO_INCREMENT,
-  name varchar(50) NOT NULL,
-  subscription varchar(10) NOT NULL,
-  code varchar(10) NOT NULL,
+  id INTEGER NOT NULL AUTO_INCREMENT,
+  name VARCHAR(50) NOT NULL,
+  subscription INTEGER(7) NOT NULL,
+  code INTEGER(5) NOT NULL,
   PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE CARD_LIMIT (
-  id integer NOT NULL AUTO_INCREMENT,
-  datetime_limit timestamp NOT NULL,
+CREATE TABLE LIMIT_CARD (
+  id INTEGER NOT NULL AUTO_INCREMENT,
+  datetime_limit TIMESTAMP NOT NULL,
   value decimal(19,2) DEFAULT NULL,
-  student_id integer NOT NULL,
+  student_id INTEGER NOT NULL,
   PRIMARY KEY (id),
   FOREIGN KEY (student_id) REFERENCES STUDENT(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE CARD_TRANSACTION (
-  id integer NOT NULL AUTO_INCREMENT,
-  datetime_transaction timestamp NOT NULL,
+CREATE TABLE TRANSACTION_CARD (
+  id INTEGER NOT NULL AUTO_INCREMENT,
+  uuid VARCHAR(15) NOT NULL,
+  datetime_transaction TIMESTAMP NOT NULL,
   value decimal(19,2) DEFAULT NULL,
-  description varchar(150),
-  card_limit_id integer NOT NULL,
+  description VARCHAR(150),
+  card_limit_id INTEGER NOT NULL,
   PRIMARY KEY (id),
-  FOREIGN KEY (card_limit_id) REFERENCES CARD_LIMIT(id)
+  FOREIGN KEY (card_limit_id) REFERENCES LIMIT_CARD(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
