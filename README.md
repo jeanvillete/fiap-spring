@@ -13,19 +13,10 @@ O trabalho atende a matéria de Spring lecionada no curso de MBA, que tem o obje
 # instrução de execução
 
 ### a partir do binário; download e execução do jar empacotado
-Uma das opções é o download do **jar** já empacotado, o que dispensaria a necessidade de utilizaçã de ferramentas para build do código fonte.  
-Necessário fazer download da versão corrente disponível em; [fiap.spring-1.0.0-RELEASE.jar](https://github.com/jeanvillete/fiap-spring/packages/-)  
-Após o download, invocar comando abaixo via terminal;  
-
-`$ java -Dorg.slf4j.simpleLogger.defaultLogLevel=debug -jar fiap.spring-1.0.0-RELEASE.jar`
+***TBD***
 
 ### a partir do código fonte; clone e build/empacotamento do projeto
-
-Após efetuar o checkout do código, utilize o comando abaixo para excução da aplicação.  
-**NOTA:** Observe a necessidade do fornecimento do "botToken" no comando maven listado abaixo.  
-**NOTA:** Requisitos, maven e Java 8.  
-
-`$ mvn exec:java -Dexec.mainClass="org.telegram.chatbot.tasks.ChatApp" -Dexec.args="AQUI_VAI_O_BOT_TOKEN" -Dorg.slf4j.simpleLogger.defaultLogLevel=debug`
+***TBD***
 
 ---
 
