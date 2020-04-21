@@ -38,10 +38,10 @@ RNF5 - Documentação Swagger
 # domínio e premissas
 
 #### aluno (STUDENT)
- - composto das informações nome, número de inscrição e código, onde as duas informações compostas número da inscrição e código compõem a identificação deste registro.
+ - composto das informações nome, número de inscrição e código, onde as duas informações número da inscrição e código compõem a identificação deste registro.
 
 #### limite do cartão (LIMIT_CARD)
- - composto das informações data e hora do registro e o valor. além de ter uma chave estrangeira para o domínio aluno.  
+ - composto das informações data e hora do registro e o valor, e ainda uma chave estrangeira para o domínio aluno.  
  - o limite do cartão é uma informação que não pode ser apagada e nem alterada. caso um novo limite seja necessário, então um novo registro deve ser inserido.
  - o limite corrente do cartão é o último registro inserido, ou seja, o registro mais recente.  
  - domínio reponsável por responder perguntas como;
@@ -49,7 +49,7 @@ RNF5 - Documentação Swagger
    - quando o novo limite foi associado?
 
 #### transações do cartão (TRANSACTION_CARD)
- - composto das informações data e hora da transação, o valor da transação e uma descrição que é opcional. há também uma chave estrangeira para o domínio limite do cartão.
+ - composto das informações data e hora da transação, o valor da transação, uma descrição que é opcional, e há também uma chave estrangeira para o domínio limite do cartão.
  - transações com valores positivos representam uma operação de débito, ou seja, uma compra.
  - transações com valores negativos representam uma operação de crédito, que pode ser por exemplo o pagamento de uma fatura ou o estorno de um débito.
  - o saldo corrente do cartão é calculado somando o valor de todas as operações já realizadas.
@@ -60,11 +60,11 @@ RNF5 - Documentação Swagger
 
 # casos de uso e seus endpoints
 
-Abaixo segue a lista de comandos, e quando necessário seus exemplos;  
+abaixo segue a lista de casos de uso e exemplos de requisições e respostas;  
 
 ##### criação de aluno
  - o caso de uso para criação de um aluno recebe no payload basicamente o nome do aluno.
- - caso já exista um aluno com mesmo nome, exceção da duplicação é devolvida; ***409 Conflict***
+ - caso já exista um aluno com mesmo nome, exceção de duplicidade deve ser lançada e com mensagem de erro explicando do problema e status code ***409 Conflict***
  - caso o nome seja válido, então gerar uma identificação para o aluno, composto do número da subscrição (7 dígitos) e o código (5 dígitos), onde este valor deve ser retornado; ***201 Created***
    - o valor para subscrição deve ser incremental, ou seja, procurar o maior corrente e incrementar.
    - o valor para o codigo deve ser um valor randomico entre 10000 e 99999, e não tem problema de conflitos.
