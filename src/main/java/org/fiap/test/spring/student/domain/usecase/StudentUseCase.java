@@ -1,6 +1,9 @@
 package org.fiap.test.spring.student.domain.usecase;
 
+import org.fiap.test.spring.common.exception.InvalidSuppliedDataException;
 import org.fiap.test.spring.student.domain.StudentService;
+import org.fiap.test.spring.student.domain.exception.StudentNameConflictException;
+import org.fiap.test.spring.student.domain.exception.StudentNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,11 +43,29 @@ public class StudentUseCase {
         }
     }
 
-    public static class StudentCreated {
+    public static class StudentId {
+        Integer subscription;
+        Integer code;
+
+        public StudentId(Integer subscription, Integer code) {
+            this.subscription = subscription;
+            this.code = code;
+        }
+
+        public Integer getSubscription() {
+            return subscription;
+        }
+
+        public Integer getCode() {
+            return code;
+        }
+    }
+
+    public static class StudentPayload {
         String id;
         String name;
 
-        public StudentCreated(String id, String name) {
+        public StudentPayload(String id, String name) {
             this.id = id;
             this.name = name;
         }
@@ -64,7 +85,7 @@ public class StudentUseCase {
         this.studentService = studentService;
     }
 
-    public StudentBatchParsedContent parseBatchContent(String fileLineContent) {
+    public StudentBatchParsedContent parseBatchContent(String fileLineContent) throws InvalidSuppliedDataException {
         this.studentService.validateFileLineContent(fileLineContent);
 
         String name = this.studentService.parseStudentName(fileLineContent);
@@ -79,7 +100,7 @@ public class StudentUseCase {
     }
 
     @Transactional
-    public StudentCreated createStudent(String name) {
+    public StudentPayload createStudent(String name) throws StudentNameConflictException, InvalidSuppliedDataException {
         String normalizedName = studentService.nameNormalization(name);
 
         studentService.validateName(normalizedName);
@@ -95,9 +116,22 @@ public class StudentUseCase {
 
         String identification = studentService.formatIdentification(newSubscription, newCode);
 
-        return new StudentCreated(
+        return new StudentPayload(
                 identification,
                 normalizedName
         );
+    }
+
+    @Transactional
+    public void updateStudentName(String studentId, StudentPayload studentPayload) throws StudentNotFoundException, StudentNameConflictException, InvalidSuppliedDataException {
+        String normalizedName = studentService.nameNormalization(studentPayload.getName());
+
+        StudentId parsedStudentId = studentService.parseStudentId(studentId);
+        studentService.validateName(normalizedName);
+
+        studentService.ensureStudentIsFound(parsedStudentId.getSubscription(), parsedStudentId.getCode());
+        studentService.checkForConflictOnUpdate(parsedStudentId.getSubscription(), parsedStudentId.getCode(), normalizedName);
+
+        studentService.updateName(parsedStudentId.getSubscription(), parsedStudentId.getCode(), normalizedName);
     }
 }

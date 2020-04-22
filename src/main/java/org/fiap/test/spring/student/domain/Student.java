@@ -21,6 +21,13 @@ class Student {
     public Student() {
     }
 
+    Student(Integer id, String name, Integer subscription, Integer code) {
+        this.id = id;
+        this.name = name;
+        this.subscription = subscription;
+        this.code = code;
+    }
+
     Student(String name, Integer subscription, Integer code) {
         this.name = name;
         this.subscription = subscription;

@@ -10,4 +10,9 @@ interface StudentRepository extends JpaRepository<Student, Integer> {
     @Query(value = "SELECT MAX(subscription) FROM Student")
     Integer highestSubscriptionValue();
 
+    Integer countBySubscriptionAndCode(Integer subscription, Integer code);
+
+    Integer countBySubscriptionNotAndCodeNotAndName(Integer subscription, Integer code, String name);
+
+    Student findBySubscriptionAndCode(Integer subscription, Integer code);
 }
