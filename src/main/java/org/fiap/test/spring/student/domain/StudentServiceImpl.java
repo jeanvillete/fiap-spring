@@ -8,9 +8,13 @@ import org.fiap.test.spring.student.domain.usecase.StudentUseCase;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Service
 class StudentServiceImpl implements StudentService {
@@ -139,6 +143,29 @@ class StudentServiceImpl implements StudentService {
         currentStudent.setName(name);
 
         studentRepository.save(currentStudent);
+    }
+
+    @Override
+    public List<StudentUseCase.StudentPayload> searchByName(String nameLikeClause) throws InvalidSuppliedDataException {
+        if (nameLikeClause == null || nameLikeClause.isEmpty()) {
+            throw new InvalidSuppliedDataException("Argument name for search cannot be null.");
+        }
+        if (nameLikeClause.length() < 3) {
+            throw new InvalidSuppliedDataException("Argument name for search must be greater than 3 characters.");
+        }
+
+        return Optional.ofNullable(studentRepository.findAllByNameContaining(nameLikeClause))
+                .orElse(Collections.emptyList())
+                .stream()
+                .map(student ->
+                        new StudentUseCase.StudentPayload(
+                                formatIdentification(
+                                        student.getSubscription(),
+                                        student.getCode()),
+                                student.getName()
+                        )
+                )
+                .collect(Collectors.toList());
     }
 
     @Override

@@ -5,6 +5,8 @@ import org.fiap.test.spring.student.domain.exception.StudentNameConflictExceptio
 import org.fiap.test.spring.student.domain.exception.StudentNotFoundException;
 import org.fiap.test.spring.student.domain.usecase.StudentUseCase;
 
+import java.util.List;
+
 public interface StudentService {
 
     void validateFileLineContent(String fileLineContent) throws InvalidSuppliedDataException;
@@ -38,4 +40,6 @@ public interface StudentService {
     void checkForConflictOnUpdate(Integer subscription, Integer code, String name) throws StudentNameConflictException;
 
     void updateName(Integer subscription, Integer code, String name);
+
+    List<StudentUseCase.StudentPayload> searchByName(String nameLikeClause) throws InvalidSuppliedDataException;
 }

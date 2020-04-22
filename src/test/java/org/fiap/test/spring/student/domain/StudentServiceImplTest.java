@@ -13,8 +13,10 @@ import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.failBecauseExceptionWasNotThrown;
+import java.util.Arrays;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -46,6 +48,16 @@ public class StudentServiceImplTest {
 
         when(studentRepository.findBySubscriptionAndCode(1234567, 12345))
                 .thenReturn(new Student(1,"ZELIA SOMEKH", 1234567, 12345));
+
+        when(studentRepository.findAllByNameContaining("SILVA")).thenReturn(
+                Arrays.asList(
+                        new Student(1,"ADRIANA PATRICIA DE OLIVEIRA SILVA", 1111111, 11111),
+                        new Student(2,"ADRIANE PENA DA SILVA", 2222222, 22222),
+                        new Student(3,"ADRIANO RICARDO PALACIO DA SILVA", 3333333, 33333),
+                        new Student(4,"YURI SILVA SOUSA", 4444444, 44444),
+                        new Student(5,"YARA CRISTINA PEREIRA DA SILVA", 5555555, 55555)
+                )
+        );
     }
 
     @Test(expected = InvalidSuppliedDataException.class)
@@ -302,5 +314,31 @@ public class StudentServiceImplTest {
         assertThat(nameToBeUpdated).isEqualTo(student.getName());
         assertThat(1234567).isEqualTo(student.getSubscription());
         assertThat(12345).isEqualTo(student.getCode());
+    }
+
+    @Test(expected = InvalidSuppliedDataException.class)
+    public void search_for_students_with_null_name() throws InvalidSuppliedDataException {
+        studentService.searchByName(null);
+    }
+
+    @Test(expected = InvalidSuppliedDataException.class)
+    public void search_for_students_with_empty_string_for_name() throws InvalidSuppliedDataException {
+        studentService.searchByName("");
+    }
+
+    @Test
+    public void search_for_students_with_valid_name() throws InvalidSuppliedDataException {
+        List<StudentUseCase.StudentPayload> students = studentService.searchByName("SILVA");
+
+        assertThat(students)
+                .hasSize(5)
+                .extracting("id", "name")
+                .containsExactlyInAnyOrder(
+                        tuple( "1111111 111-11", "ADRIANA PATRICIA DE OLIVEIRA SILVA"),
+                        tuple( "2222222 222-22", "ADRIANE PENA DA SILVA"),
+                        tuple( "3333333 333-33", "ADRIANO RICARDO PALACIO DA SILVA"),
+                        tuple( "4444444 444-44", "YURI SILVA SOUSA"),
+                        tuple( "5555555 555-55", "YARA CRISTINA PEREIRA DA SILVA")
+                );
     }
 }

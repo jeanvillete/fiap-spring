@@ -7,6 +7,8 @@ import org.fiap.test.spring.student.domain.exception.StudentNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Component
 public class StudentUseCase {
 
@@ -95,6 +97,7 @@ public class StudentUseCase {
         return new StudentBatchParsedContent(name, subscription, code);
     }
 
+    @Transactional
     public void insertStudent(StudentBatchParsedContent studentBatchParsedContent) {
         this.studentService.insert(studentBatchParsedContent);
     }
@@ -133,5 +136,11 @@ public class StudentUseCase {
         studentService.checkForConflictOnUpdate(parsedStudentId.getSubscription(), parsedStudentId.getCode(), normalizedName);
 
         studentService.updateName(parsedStudentId.getSubscription(), parsedStudentId.getCode(), normalizedName);
+    }
+
+    public List<StudentPayload> searchStudentsByName(String nameLikeClause) throws InvalidSuppliedDataException {
+        String normalizedName = studentService.nameNormalization(nameLikeClause);
+
+        return studentService.searchByName(normalizedName);
     }
 }

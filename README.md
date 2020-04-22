@@ -109,8 +109,6 @@ PUT /students/9999999 999-99
  - o caso de uso para busca/listagem de aluno, serve basicamente para possibilitar encontrar a identificação do aluno, mas também permite uma busca por parte do nome.
    - o nome de exemplo para busca deve ser fornecido  via ***query string***
    - é obrigatório o fornecimento da ***query string*** com nome de exemplo, e deve conter pelo ao menos 2 caracteres.
- - o resultado deve ser paginado, com número máximo de 20 registros por página.
-   - como o resultado será paginado, é necessário devolver na resposta seção com total de registros que atendem o critério do nome.
  
 ```
 [request]

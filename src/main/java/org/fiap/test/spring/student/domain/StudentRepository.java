@@ -3,6 +3,8 @@ package org.fiap.test.spring.student.domain;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.List;
+
 interface StudentRepository extends JpaRepository<Student, Integer> {
 
     Integer countByName(String name);
@@ -15,4 +17,6 @@ interface StudentRepository extends JpaRepository<Student, Integer> {
     Integer countBySubscriptionNotAndCodeNotAndName(Integer subscription, Integer code, String name);
 
     Student findBySubscriptionAndCode(Integer subscription, Integer code);
+
+    List<Student> findAllByNameContaining(String name);
 }
