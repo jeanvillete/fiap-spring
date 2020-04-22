@@ -1,7 +1,7 @@
 package org.fiap.test.spring.student.application;
 
-import org.fiap.test.spring.student.domain.Student;
-import org.fiap.test.spring.student.domain.StudentService;
+import org.fiap.test.spring.common.exception.InvalidSuppliedDataException;
+import org.fiap.test.spring.student.domain.usecase.StudentUseCase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.Job;
@@ -24,10 +24,10 @@ public class SpringBatchConfig {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SpringBatchConfig.class);
 
-    private final StudentService studentService;
+    private final StudentUseCase studentUseCase;
 
-    public SpringBatchConfig(StudentService studentService) {
-        this.studentService = studentService;
+    public SpringBatchConfig(StudentUseCase studentUseCase) {
+        this.studentUseCase = studentUseCase;
     }
 
     @Bean("studentFileReader")
@@ -42,13 +42,13 @@ public class SpringBatchConfig {
     }
 
     @Bean("studentItemProcessor")
-    public ItemProcessor<String, Student> processor() {
+    public ItemProcessor<String, StudentUseCase.StudentBatchParsedContent> processor() {
         return lineContent -> {
             LOGGER.debug("Processing lineContent item {}", lineContent);
 
             try {
-                return new Student(lineContent);
-            } catch (IllegalArgumentException exception) {
+                return studentUseCase.parseBatchContent(lineContent);
+            } catch (InvalidSuppliedDataException exception) {
                 LOGGER.debug("Skipping item with invalid line content {}", lineContent);
                 return null;
             }
@@ -56,19 +56,19 @@ public class SpringBatchConfig {
     }
 
     @Bean("studentItemWriter")
-    public ItemWriter<Student> itemWriterLogger() {
+    public ItemWriter<StudentUseCase.StudentBatchParsedContent> itemWriterLogger() {
         return _students -> _students.stream()
                 .peek(_student -> LOGGER.debug("Writing student item {}", _student))
-                .forEach(studentService::insert);
+                .forEach(studentUseCase::insertStudent);
     }
 
     @Bean("studentStep")
     public Step step(StepBuilderFactory stepBuilderFactory,
                      @Qualifier("studentFileReader") ItemReader<String> studentItemReader,
-                     @Qualifier("studentItemProcessor") ItemProcessor<String, Student> studentItemProcessor,
-                     @Qualifier("studentItemWriter") ItemWriter<Student> studentItemWriter) {
+                     @Qualifier("studentItemProcessor") ItemProcessor<String, StudentUseCase.StudentBatchParsedContent> studentItemProcessor,
+                     @Qualifier("studentItemWriter") ItemWriter<StudentUseCase.StudentBatchParsedContent> studentItemWriter) {
         return stepBuilderFactory.get("import students; step")
-                .<String, Student>chunk(50)
+                .<String, StudentUseCase.StudentBatchParsedContent>chunk(50)
                 .reader(studentItemReader)
                 .processor(studentItemProcessor)
                 .writer(studentItemWriter)

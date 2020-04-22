@@ -64,6 +64,8 @@ abaixo segue a lista de casos de uso e exemplos de requisições e respostas;
 
 ##### criação de aluno
  - o caso de uso para criação de um aluno recebe no payload basicamente o nome do aluno.
+ - aplicar trim no nome recebido e após esta aplicação, efetuar validação abaixo
+ - o nome deve ser válido, contendo uma ocorrência de no mínimo três caracteres seguido por espaço e outros três caracteres.
  - caso já exista um aluno com mesmo nome, exceção de duplicidade deve ser lançada e com mensagem de erro explicando do problema e status code ***409 Conflict***
  - caso o nome seja válido, então gerar uma identificação para o aluno, composto do número da subscrição (7 dígitos) e o código (5 dígitos), onde este valor deve ser retornado; ***201 Created***
    - o valor para subscrição deve ser incremental, ou seja, procurar o maior corrente e incrementar.
@@ -80,7 +82,8 @@ POST /students
 [response]
 201 Created
 {
-    "id": "9999999 999-99"
+    "id": "9999999 999-99",
+    "name": "SAMPLE USER NAME"
 }
 ```
 
