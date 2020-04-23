@@ -1,6 +1,7 @@
 package org.fiap.test.spring.student.domain.usecase;
 
 import org.fiap.test.spring.common.exception.InvalidSuppliedDataException;
+import org.fiap.test.spring.student.domain.StudentId;
 import org.fiap.test.spring.student.domain.StudentService;
 import org.fiap.test.spring.student.domain.exception.StudentNameConflictException;
 import org.fiap.test.spring.student.domain.exception.StudentNotFoundException;
@@ -34,24 +35,6 @@ public class StudentUseCase {
 
         public String getName() {
             return name;
-        }
-
-        public Integer getSubscription() {
-            return subscription;
-        }
-
-        public Integer getCode() {
-            return code;
-        }
-    }
-
-    public static class StudentId {
-        Integer subscription;
-        Integer code;
-
-        public StudentId(Integer subscription, Integer code) {
-            this.subscription = subscription;
-            this.code = code;
         }
 
         public Integer getSubscription() {

@@ -90,7 +90,7 @@ class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public StudentUseCase.StudentId parseStudentId(String studentId) throws InvalidSuppliedDataException {
+    public StudentId parseStudentId(String studentId) throws InvalidSuppliedDataException {
         if (studentId == null || studentId.isEmpty()) {
             throw new InvalidSuppliedDataException("Parameter student id is mandatory.");
         }
@@ -106,7 +106,7 @@ class StudentServiceImpl implements StudentService {
         String codeAfterDash = studentIdMatcher.group(3);
         Integer studentCode = Integer.valueOf(codeBeforeDash + codeAfterDash);
 
-        return new StudentUseCase.StudentId(
+        return new StudentId(
                 studentSubscription,
                 studentCode
         );
@@ -166,6 +166,11 @@ class StudentServiceImpl implements StudentService {
                         )
                 )
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Student findStudent(Integer subscription, Integer code) {
+        return studentRepository.findBySubscriptionAndCode(subscription, code);
     }
 
     @Override

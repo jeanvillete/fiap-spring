@@ -33,7 +33,7 @@ public interface StudentService {
 
     String formatIdentification(Integer subscription, Integer code);
 
-    StudentUseCase.StudentId parseStudentId(String studentId) throws InvalidSuppliedDataException;
+    StudentId parseStudentId(String studentId) throws InvalidSuppliedDataException;
 
     void ensureStudentIsFound(Integer subscription, Integer code) throws StudentNotFoundException;
 
@@ -42,4 +42,6 @@ public interface StudentService {
     void updateName(Integer subscription, Integer code, String name);
 
     List<StudentUseCase.StudentPayload> searchByName(String nameLikeClause) throws InvalidSuppliedDataException;
+
+    Student findStudent(Integer subscription, Integer code);
 }

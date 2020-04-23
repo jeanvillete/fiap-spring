@@ -268,7 +268,7 @@ public class StudentServiceImplTest {
 
     @Test
     public void parse_student_id_with_valid_content() throws InvalidSuppliedDataException {
-        StudentUseCase.StudentId studentId = studentService.parseStudentId("1234567 123-45");
+        StudentId studentId = studentService.parseStudentId("1234567 123-45");
 
         assertThat(studentId.getSubscription()).isEqualTo(1234567);
         assertThat(studentId.getCode()).isEqualTo(12345);
@@ -340,5 +340,22 @@ public class StudentServiceImplTest {
                         tuple( "4444444 444-44", "YURI SILVA SOUSA"),
                         tuple( "5555555 555-55", "YARA CRISTINA PEREIRA DA SILVA")
                 );
+    }
+
+    @Test
+    public void try_find_student_but_providing_invalid_parameter() {
+        Student student = studentService.findStudent(7654321, 54321);
+
+        assertThat(student).isNull();
+    }
+
+    @Test
+    public void try_find_student_providing_valid_parameters() {
+        Student student = studentService.findStudent(1234567, 12345);
+
+        assertThat(student.getId()).isEqualTo(1);
+        assertThat(student.getName()).isEqualTo("ZELIA SOMEKH");
+        assertThat(student.getSubscription()).isEqualTo(1234567);
+        assertThat(student.getCode()).isEqualTo(12345);
     }
 }

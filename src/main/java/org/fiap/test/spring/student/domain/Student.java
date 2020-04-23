@@ -3,7 +3,7 @@ package org.fiap.test.spring.student.domain;
 import javax.persistence.*;
 
 @Entity
-class Student {
+public class Student {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,7 +18,7 @@ class Student {
     @Column(nullable = false, length = 5)
     private Integer code;
 
-    public Student() {
+    Student() {
     }
 
     Student(Integer id, String name, Integer subscription, Integer code) {
@@ -45,7 +45,7 @@ class Student {
     }
 
     // GETTERS AND SETTERS //
-    Integer getId() {
+    public Integer getId() {
         return id;
     }
 
@@ -53,7 +53,7 @@ class Student {
         this.id = id;
     }
 
-    String getName() {
+    public String getName() {
         return name;
     }
 
@@ -61,7 +61,7 @@ class Student {
         this.name = name;
     }
 
-    Integer getSubscription() {
+    public Integer getSubscription() {
         return subscription;
     }
 
@@ -69,7 +69,7 @@ class Student {
         this.subscription = subscription;
     }
 
-    Integer getCode() {
+    public Integer getCode() {
         return code;
     }
 
