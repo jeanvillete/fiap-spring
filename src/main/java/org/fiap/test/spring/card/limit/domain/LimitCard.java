@@ -4,8 +4,8 @@ import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-@Entity(name = "LIMIT_CARD")
-public class Limit {
+@Entity
+public class LimitCard {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,13 +20,23 @@ public class Limit {
     @Column(name = "student_id")
     private Integer student;
 
-    public Limit(BigDecimal value, Integer student) {
+    LimitCard() {
+    }
+
+    LimitCard(Integer id, LocalDateTime date, BigDecimal value, Integer student) {
+        this.id = id;
+        this.date = date;
+        this.value = value;
+        this.student = student;
+    }
+
+    public LimitCard(BigDecimal value, Integer student) {
         this.date = LocalDateTime.now();
         this.value = value;
         this.student = student;
     }
 
-    Integer getId() {
+    public Integer getId() {
         return id;
     }
 
@@ -34,7 +44,7 @@ public class Limit {
         this.id = id;
     }
 
-    LocalDateTime getDate() {
+    public LocalDateTime getDate() {
         return date;
     }
 
@@ -42,7 +52,7 @@ public class Limit {
         this.date = date;
     }
 
-    BigDecimal getValue() {
+    public BigDecimal getValue() {
         return value;
     }
 
@@ -50,7 +60,7 @@ public class Limit {
         this.value = value;
     }
 
-    Integer getStudent() {
+    public Integer getStudent() {
         return student;
     }
 

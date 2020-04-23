@@ -5,14 +5,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 
 @Service
-class LimitServiceImpl implements LimitService {
+class LimitCardServiceImpl implements LimitCardService {
 
-    private final LimitRepository limitRepository;
+    private final LimitCardRepository limitCardRepository;
 
-    LimitServiceImpl(LimitRepository limitRepository) {
-        this.limitRepository = limitRepository;
+    LimitCardServiceImpl(LimitCardRepository limitCardRepository) {
+        this.limitCardRepository = limitCardRepository;
     }
 
     @Override
@@ -27,8 +28,19 @@ class LimitServiceImpl implements LimitService {
 
     @Override
     @Transactional
-    public void insert(Limit limit) {
-        limitRepository.save(limit);
+    public void insert(LimitCard limitCard) {
+        limitCardRepository.save(limitCard);
+    }
+
+    @Override
+    public Optional<LimitCard> getCurrentLimitCard(Integer studentId) {
+        Optional<Integer> highestLimitId = Optional.ofNullable(
+                limitCardRepository.maxIdByStudentId(
+                        studentId
+                )
+        );
+
+        return limitCardRepository.findById(highestLimitId.orElse(0));
     }
 
 }
