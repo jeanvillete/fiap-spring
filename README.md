@@ -144,7 +144,6 @@ POST /students/9999999 999-99/card/limit
 ##### consulta limite corrente do aluno
  - o caso de uso para consulta do limite corrente para determinado aluno recebe apenas a identificação do aluno.
    - a identificação do aluno deve ser fornecida como ***path variable***
-   - o valor deve ser um inteiro maior ou igual a zero (0)
  - caso a identificação seja inválida ou não existir um registro para a mesma, devolver ***404 Not Found***
  
 ```
