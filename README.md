@@ -162,8 +162,8 @@ GET /students/9999999 999-99/card/limit
 
 ##### lança transação de débito para aluno; [issue #6](https://github.com/jeanvillete/fiap-spring/issues/6)
  - uma transação de débito significa uma compra
- - valida se existe um limite associado para o aluno corrente, caso requisito não seja atendido, devolver resposta explicando o problema; ***428 Precondition Required***
- - valida se o saldo corrente do aluno é menor que o limite corrente, caso requisito não seja atendido, devolver resposta explicando o problema; ***428 Precondition Required***
+ - valida se ***existe um limite associado para o aluno corrente***, caso requisito não seja atendido, devolver resposta explicando o problema; ***428 Precondition Required***
+ - valida se o ***saldo corrente do aluno somado a transação fornecida é menor que o limite corrente***, caso requisito não seja atendido, devolver resposta explicando o problema; ***428 Precondition Required***
  - no caso de sucesso devolver o UUID que identifica a criação da transação
  - o corpo da requisição deve conter o valor da compra e uma descrição (opcional)
  - caso a identificação seja inválida ou não existir um registro para a mesma, devolver ***404 Not Found***
