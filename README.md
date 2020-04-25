@@ -8,6 +8,9 @@ O trabalho atende a matéria de Spring lecionada no curso de MBA, que tem o obje
 ###### Matéria: SPRING
 ###### Prof. FABIO TADASHI MIYASATO
 
+O projeto é versionado no github através do repositório [github.com/jeanvillete/fiap-spring](https://github.com/jeanvillete/fiap-spring)  
+As atividades levantadas para serem desenvolvidas de acordo com cada ***caso de uso*** estão geridas no [projeto github jeanvillete/fiap-spring](https://github.com/jeanvillete/fiap-spring/projects/1)
+
 ---
 
 # instrução de execução
@@ -62,7 +65,7 @@ RNF5 - Documentação Swagger
 
 abaixo segue a lista de casos de uso e exemplos de requisições e respostas;  
 
-##### criação de aluno
+##### criação de aluno; [issue #1](https://github.com/jeanvillete/fiap-spring/issues/1)
  - o caso de uso para criação de um aluno recebe no payload basicamente o nome do aluno.
  - aplicar trim no nome recebido e após esta aplicação, efetuar validação abaixo
  - o nome deve ser válido, contendo uma ocorrência de no mínimo três caracteres seguido por espaço e outros três caracteres.
@@ -87,7 +90,7 @@ POST /students
 }
 ```
 
-##### atualização do nome do aluno
+##### atualização do nome do aluno; [issue #2](https://github.com/jeanvillete/fiap-spring/issues/2)
  - o caso de uso para atualização do nome do aluno recebe no payload o nome do aluno.
    - a identificação do aluno deve ser fornecida como ***path variable***
  - caso já exista um outro aluno com mesmo nome, exceção da duplicação é devolvida; ***409 Conflict***
@@ -105,7 +108,7 @@ PUT /students/9999999 999-99
 200 Ok
 ```
 
-##### busca por aluno baseado no nome
+##### busca por aluno baseado no nome; [issue #3](https://github.com/jeanvillete/fiap-spring/issues/3)
  - o caso de uso para busca/listagem de aluno, serve basicamente para possibilitar encontrar a identificação do aluno, mas também permite uma busca por parte do nome.
    - o nome de exemplo para busca deve ser fornecido  via ***query string***
    - é obrigatório o fornecimento da ***query string*** com nome de exemplo, e deve conter pelo ao menos 2 caracteres.
@@ -124,7 +127,7 @@ GET /students?name=SAMPLE
 ]
 ```
 
-##### cria novo limite para aluno
+##### cria novo limite para aluno; [issue #4](https://github.com/jeanvillete/fiap-spring/issues/4)
  - o caso de uso para criação de novo limite para determinado aluno recebe basicamente no payload a informação do valor.
    - a identificação do aluno deve ser fornecida como ***path variable***
    - o valor deve ser um inteiro maior ou igual a zero (0)
@@ -141,7 +144,7 @@ POST /students/9999999 999-99/card/limit
 201 Created
 ```
 
-##### consulta limite corrente do aluno
+##### consulta limite corrente do aluno; [issue #5](https://github.com/jeanvillete/fiap-spring/issues/5)
  - o caso de uso para consulta do limite corrente para determinado aluno recebe apenas a identificação do aluno.
    - a identificação do aluno deve ser fornecida como ***path variable***
  - caso a identificação seja inválida ou não existir um registro para a mesma, devolver ***404 Not Found***
@@ -157,7 +160,7 @@ GET /students/9999999 999-99/card/limit
 }
 ```
 
-##### lança transação de débito para aluno
+##### lança transação de débito para aluno; [issue #6](https://github.com/jeanvillete/fiap-spring/issues/6)
  - uma transação de débito significa uma compra
  - valida se existe um limite associado para o aluno corrente, caso requisito não seja atendido, devolver resposta explicando o problema; ***428 Precondition Required***
  - valida se o saldo corrente do aluno é menor que o limite corrente, caso requisito não seja atendido, devolver resposta explicando o problema; ***428 Precondition Required***
@@ -180,7 +183,7 @@ POST /students/9999999 999-99/card/debit
 }
 ```
 
-##### lança transação de crédito para aluno (estorno de compra)
+##### lança transação de crédito para aluno (estorno de compra); [issue #7](https://github.com/jeanvillete/fiap-spring/issues/7)
  - uma transação de crédito significa por exemplo o pagamento de uma fatura ou o estorno de uma compra, no caso corrente um estorno
  - no caso do estorno, a identificação do pagamento deve estar presente via ***path variable***
  - deve ser verificado se a transação correspondente existe, caso não seja encontrado, devolver resposta informando do problema ***404 Not Found***
@@ -199,7 +202,7 @@ POST /students/9999999 999-99/card/chargeback/95963271-48a2-4dbd-abaa-93256de381
 }
 ```
 
-##### lança transação de crédito para aluno (pagamento fatura)
+##### lança transação de crédito para aluno (pagamento fatura); [issue #8](https://github.com/jeanvillete/fiap-spring/issues/8)
  - uma transação de crédito significa por exemplo o pagamento de uma fatura ou o estorno de uma compra, no caso corrente o pagamento de uma fatura
  - no caso de sucesso do estorno, devolver o UUID que identifica a transação do pagamento da fatura em equestão
  - caso a identificação seja inválida ou não existir um registro para a mesma, devolver ***404 Not Found***
@@ -218,7 +221,7 @@ POST /students/9999999 999-99/card/bill-payment
 }
 ```
 
-##### calcula extrato para um determinado mês
+##### calcula extrato para um determinado mês; [issue #9](https://github.com/jeanvillete/fiap-spring/issues/9)
  - para o calculo do extrato de um mês específico, deve-se obter todas as transações até este mês em questão, e calcular o saldo deste mês
  - o mês e ano que se procura o extrato deve ser informado ambos via ***path variable***
  - caso a identificação seja inválida ou não existir um registro para a mesma, devolver ***404 Not Found***
