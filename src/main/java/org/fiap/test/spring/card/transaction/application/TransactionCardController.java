@@ -33,7 +33,7 @@ public class TransactionCardController {
         return transactionCardUseCase.debit(id, debitTransactionCard);
     }
 
-    @PostMapping("chargeback/{transactionUUIDToBeChargedBack}")
+    @PostMapping("charge-back/{transactionUUIDToBeChargedBack}")
     @ResponseStatus(HttpStatus.CREATED)
     public TransactionCardUseCase.TransactionCardPayload createChargeBackTransaction(
             @PathVariable String id,
@@ -50,6 +50,19 @@ public class TransactionCardController {
                         transactionUUIDToBeChargedBack
                 )
         );
+    }
+
+    @PostMapping("bill-payment")
+    @ResponseStatus(HttpStatus.CREATED)
+    public TransactionCardUseCase.TransactionCardPayload createBillPaymentTransaction(
+            @PathVariable String id,
+            @RequestBody TransactionCardUseCase.TransactionCardPayload paymentBillTransactionCard
+    ) throws
+            InvalidSuppliedDataException,
+            StudentNotFoundException,
+            LimitCardNotFoundForATransaction {
+
+        return transactionCardUseCase.billPayment(id, paymentBillTransactionCard);
     }
 
 }

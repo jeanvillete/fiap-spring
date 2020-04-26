@@ -193,7 +193,7 @@ POST /students/9999999 999-99/card/debit
 
 ```
 [request]
-POST /students/9999999 999-99/card/chargeback/95963271-48a2-4dbd-abaa-93256de381d4
+POST /students/9999999 999-99/card/charge-back/95963271-48a2-4dbd-abaa-93256de381d4
 
 [response]
 201 Created

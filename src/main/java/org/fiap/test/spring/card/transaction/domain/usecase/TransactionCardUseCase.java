@@ -130,4 +130,33 @@ public class TransactionCardUseCase {
         );
     }
 
+    public TransactionCardPayload billPayment(String id, TransactionCardPayload transactionCardWithBillPaymentPayload) throws InvalidSuppliedDataException, StudentNotFoundException, LimitCardNotFoundForATransaction {
+        StudentId studentId = studentService.parseStudentId(id);
+
+        studentService.ensureStudentIsFound(studentId.getSubscription(), studentId.getCode());
+
+        Student student = studentService.findStudent(studentId.getSubscription(), studentId.getCode());
+
+        LimitCard currentLimitCard = limitCardService.getCurrentLimitCard(student)
+                .orElseThrow(() -> new LimitCardNotFoundForATransaction("No limit is assigned to the student."));
+
+        transactionCardService.validateTransactionMinimumValue(transactionCardWithBillPaymentPayload);
+
+        TransactionCard transactionCardBillPayment = transactionCardService.insert(
+                TransactionCard.billPayment(
+                        transactionCardWithBillPaymentPayload.getValue().multiply(new BigDecimal(-1)),
+                        String.format(
+                                "Payment bill with value %s",
+                                transactionCardWithBillPaymentPayload.getValue().toString()
+                        ),
+                        currentLimitCard
+                )
+        );
+
+        return new TransactionCardPayload(
+                transactionCardBillPayment.getUuid(),
+                transactionCardBillPayment.getValue(),
+                transactionCardBillPayment.getDescription()
+        );
+    }
 }
