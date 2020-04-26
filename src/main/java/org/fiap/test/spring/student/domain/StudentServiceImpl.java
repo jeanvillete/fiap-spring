@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -114,19 +113,21 @@ class StudentServiceImpl implements StudentService {
 
     @Override
     public void ensureStudentIsFound(Integer subscription, Integer code) throws StudentNotFoundException {
-        Integer count = studentRepository.countBySubscriptionAndCode(subscription, code);
-
-        if (count == 0) {
-            throw new StudentNotFoundException(
-                    "Student not found for the provided id; " +
-                            formatIdentification(subscription, code)
-            );
-        }
+        studentRepository.countBySubscriptionAndCode(subscription, code)
+                .orElseThrow(() ->
+                        new StudentNotFoundException(
+                                "Student not found for the provided id; " +
+                                        formatIdentification(
+                                                subscription,
+                                                code
+                                        )
+                        )
+                );
     }
 
     @Override
     public void checkForConflictOnUpdate(Integer subscription, Integer code, String name) throws StudentNameConflictException {
-        Integer count = studentRepository.countBySubscriptionNotAndCodeNotAndName(subscription, code, name);
+        Integer count = studentRepository.countBySubscriptionNotAndCodeNotAndName(subscription, code, name).orElse(0);
 
         if (count > 0) {
             throw new StudentNameConflictException(
@@ -138,7 +139,7 @@ class StudentServiceImpl implements StudentService {
     @Override
     @Transactional
     public void updateName(Integer subscription, Integer code, String name) {
-        Student currentStudent = studentRepository.findBySubscriptionAndCode(subscription, code);
+        Student currentStudent = studentRepository.findBySubscriptionAndCode(subscription, code).get();
 
         currentStudent.setName(name);
 
@@ -154,7 +155,7 @@ class StudentServiceImpl implements StudentService {
             throw new InvalidSuppliedDataException("Argument name for search must be greater than 3 characters.");
         }
 
-        return Optional.ofNullable(studentRepository.findAllByNameContaining(nameLikeClause))
+        return studentRepository.findAllByNameContaining(nameLikeClause)
                 .orElse(Collections.emptyList())
                 .stream()
                 .map(student ->
@@ -170,7 +171,7 @@ class StudentServiceImpl implements StudentService {
 
     @Override
     public Student findStudent(Integer subscription, Integer code) {
-        return studentRepository.findBySubscriptionAndCode(subscription, code);
+        return studentRepository.findBySubscriptionAndCode(subscription, code).orElse(null);
     }
 
     @Override
@@ -194,7 +195,7 @@ class StudentServiceImpl implements StudentService {
 
     @Override
     public void checkForConflictOnInsert(String name) throws StudentNameConflictException {
-        Integer countByName = studentRepository.countByName(name);
+        Integer countByName = studentRepository.countByName(name).orElse(0);
 
         if (countByName > 0) {
             throw new StudentNameConflictException("Student with name " + name + " is already recorded.");
@@ -203,7 +204,7 @@ class StudentServiceImpl implements StudentService {
 
     @Override
     public Integer highestSubscriptionValue() {
-        return studentRepository.highestSubscriptionValue();
+        return studentRepository.highestSubscriptionValue().orElse(0);
     }
 
     @Override

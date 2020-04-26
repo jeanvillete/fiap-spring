@@ -28,7 +28,7 @@ public class TransactionCardServiceImplTest {
     private TransactionCardService transactionCardService;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         transactionCardService = new TransactionCardServiceImpl(transactionCardRepository);
 
         when(transactionCardRepository.balance(SAMPLE_STUDENT)).thenReturn(Optional.of(new BigDecimal("69.44")));

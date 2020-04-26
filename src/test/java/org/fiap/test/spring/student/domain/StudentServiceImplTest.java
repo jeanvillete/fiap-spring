@@ -15,6 +15,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -34,28 +35,30 @@ public class StudentServiceImplTest {
     private StudentService studentService;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         studentService = new StudentServiceImpl(studentRepository, studentActuator);
 
         when(studentRepository.countByName("ZELIA SOMEKH"))
-                .thenReturn(1);
+                .thenReturn(Optional.of(1));
 
         when(studentRepository.countBySubscriptionAndCode(1234567, 12345))
-                .thenReturn(1);
+                .thenReturn(Optional.of(1));
 
         when(studentRepository.countBySubscriptionNotAndCodeNotAndName(1234567, 12345, "ZELIA SOMEKH"))
-                .thenReturn(1);
+                .thenReturn(Optional.of(1));
 
         when(studentRepository.findBySubscriptionAndCode(1234567, 12345))
-                .thenReturn(new Student(1,"ZELIA SOMEKH", 1234567, 12345));
+                .thenReturn(Optional.of(new Student(1,"ZELIA SOMEKH", 1234567, 12345)));
 
         when(studentRepository.findAllByNameContaining("SILVA")).thenReturn(
-                Arrays.asList(
-                        new Student(1,"ADRIANA PATRICIA DE OLIVEIRA SILVA", 1111111, 11111),
-                        new Student(2,"ADRIANE PENA DA SILVA", 2222222, 22222),
-                        new Student(3,"ADRIANO RICARDO PALACIO DA SILVA", 3333333, 33333),
-                        new Student(4,"YURI SILVA SOUSA", 4444444, 44444),
-                        new Student(5,"YARA CRISTINA PEREIRA DA SILVA", 5555555, 55555)
+                Optional.of(
+                        Arrays.asList(
+                                new Student(1,"ADRIANA PATRICIA DE OLIVEIRA SILVA", 1111111, 11111),
+                                new Student(2,"ADRIANE PENA DA SILVA", 2222222, 22222),
+                                new Student(3,"ADRIANO RICARDO PALACIO DA SILVA", 3333333, 33333),
+                                new Student(4,"YURI SILVA SOUSA", 4444444, 44444),
+                                new Student(5,"YARA CRISTINA PEREIRA DA SILVA", 5555555, 55555)
+                        )
                 )
         );
     }

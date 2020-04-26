@@ -4,19 +4,20 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+import java.util.Optional;
 
 interface StudentRepository extends JpaRepository<Student, Integer> {
 
-    Integer countByName(String name);
+    Optional<Integer> countByName(String name);
 
     @Query(value = "SELECT MAX(subscription) FROM Student")
-    Integer highestSubscriptionValue();
+    Optional<Integer> highestSubscriptionValue();
 
-    Integer countBySubscriptionAndCode(Integer subscription, Integer code);
+    Optional<Integer> countBySubscriptionAndCode(Integer subscription, Integer code);
 
-    Integer countBySubscriptionNotAndCodeNotAndName(Integer subscription, Integer code, String name);
+    Optional<Integer> countBySubscriptionNotAndCodeNotAndName(Integer subscription, Integer code, String name);
 
-    Student findBySubscriptionAndCode(Integer subscription, Integer code);
+    Optional<Student> findBySubscriptionAndCode(Integer subscription, Integer code);
 
-    List<Student> findAllByNameContaining(String name);
+    Optional<List<Student>> findAllByNameContaining(String name);
 }

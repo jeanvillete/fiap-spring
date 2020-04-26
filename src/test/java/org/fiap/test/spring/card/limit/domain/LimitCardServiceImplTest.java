@@ -25,11 +25,11 @@ public class LimitCardServiceImplTest {
     private LimitCardService limitCardService;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         limitCardService = new LimitCardServiceImpl(limitCardRepository);
 
-        when(limitCardRepository.maxIdByStudentId(new Student(1))).thenReturn(10);
-        when(limitCardRepository.maxIdByStudentId(new Student(2))).thenReturn(20);
+        when(limitCardRepository.maxIdByStudentId(new Student(1))).thenReturn(Optional.of(10));
+        when(limitCardRepository.maxIdByStudentId(new Student(2))).thenReturn(Optional.of(20));
 
         when(limitCardRepository.findById(10)).thenReturn(Optional.empty());
         when(limitCardRepository.findById(20))

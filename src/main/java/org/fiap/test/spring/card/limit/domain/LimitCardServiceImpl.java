@@ -35,9 +35,7 @@ class LimitCardServiceImpl implements LimitCardService {
 
     @Override
     public Optional<LimitCard> getCurrentLimitCard(Student student) {
-        Optional<Integer> highestLimitId = Optional.ofNullable(
-                limitCardRepository.maxIdByStudentId(student)
-        );
+        Optional<Integer> highestLimitId = limitCardRepository.maxIdByStudentId(student);
 
         return limitCardRepository.findById(highestLimitId.orElse(0));
     }
