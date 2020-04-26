@@ -20,5 +20,6 @@ interface TransactionCardRepository extends JpaRepository<TransactionCard, Integ
     @Query(value = "SELECT td FROM TransactionCard td JOIN td.limitCard lc WHERE lc.student = :student AND td.uuid = :transactionUUIDToBeChargedBack")
     Optional<TransactionCard> retrieveTransactionCardToBeChargedBack(Student student, String transactionUUIDToBeChargedBack);
 
-    Optional<List<TransactionCard>> findByDateBetweenOrderByDate(LocalDateTime start, LocalDateTime end);
+    @Query(value = "SELECT td FROM TransactionCard td JOIN td.limitCard lc WHERE lc.student = :student AND td.date >= :start AND td.date <= :end")
+    Optional<List<TransactionCard>> findByStudentAndDateQuery(Student student, LocalDateTime start, LocalDateTime end);
 }

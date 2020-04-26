@@ -99,7 +99,7 @@ class TransactionCardServiceImpl implements TransactionCardService {
         LocalDateTime firstTimeWithinForStatementMonth = veryFirstTimeWithinForStatementMonth(statementMonth);
         LocalDateTime lastTimeForStatementMonth = veryLastTimeForStatementMonth(statementMonth);
 
-        return transactionCardRepository.findByDateBetweenOrderByDate(firstTimeWithinForStatementMonth, lastTimeForStatementMonth)
+        return transactionCardRepository.findByStudentAndDateQuery(student, firstTimeWithinForStatementMonth, lastTimeForStatementMonth)
                 .orElse(Collections.EMPTY_LIST);
     }
 
