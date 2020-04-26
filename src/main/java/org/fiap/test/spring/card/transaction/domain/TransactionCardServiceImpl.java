@@ -43,14 +43,14 @@ class TransactionCardServiceImpl implements TransactionCardService {
     }
 
     @Override
-    public void validateTransactionMinimumValue(BigDecimal value) throws InvalidSuppliedDataException {
-        if (value == null) {
-            throw new InvalidSuppliedDataException("Argument value cannot be null");
-        }
-
-        if (value.compareTo(BigDecimal.ZERO) != 1) {
-            throw new InvalidSuppliedDataException("Argument value must be greater than zero (0)");
-        }
+    public void validateTransactionMinimumValue(TransactionCardUseCase.TransactionCardPayload transactionCardPayload) throws InvalidSuppliedDataException {
+        Optional.ofNullable(transactionCardPayload)
+                .map(TransactionCardUseCase.TransactionCardPayload::getValue)
+                .filter(Objects::nonNull)
+                .filter(value -> value.compareTo(BigDecimal.ZERO) == 1)
+                .orElseThrow(() ->
+                        new InvalidSuppliedDataException("Argument value must be supplied and greater than zero (0)")
+                );
     }
 
     @Override

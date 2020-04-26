@@ -61,7 +61,7 @@ public class TransactionCardServiceImplTest {
 
     @Test(expected = InvalidSuppliedDataException.class)
     public void check_negative_minimum_transaction_value() throws InvalidSuppliedDataException {
-        transactionCardService.validateTransactionMinimumValue(new BigDecimal("-1"));
+        transactionCardService.validateTransactionMinimumValue(new TransactionCardUseCase.TransactionCardPayload(new BigDecimal("-1")));
     }
 
     @Test(expected = InvalidSuppliedDataException.class)
@@ -71,7 +71,7 @@ public class TransactionCardServiceImplTest {
 
     @Test
     public void check_valid_positive_minimum_transaction_value() throws InvalidSuppliedDataException {
-        transactionCardService.validateTransactionMinimumValue(new BigDecimal("1"));
+        transactionCardService.validateTransactionMinimumValue(new TransactionCardUseCase.TransactionCardPayload(new BigDecimal("1")));
     }
 
     @Test(expected = InvalidSuppliedDataException.class)
@@ -81,7 +81,7 @@ public class TransactionCardServiceImplTest {
 
     @Test(expected = InvalidSuppliedDataException.class)
     public void invoke_transaction_charge_back_with_null_uuid_data() throws InvalidSuppliedDataException {
-        transactionCardService.validateAndExtractTransactionUUID(new TransactionCardUseCase.TransactionCardPayload(null));
+        transactionCardService.validateAndExtractTransactionUUID(new TransactionCardUseCase.TransactionCardPayload((String) null));
     }
 
     @Test(expected = InvalidSuppliedDataException.class)

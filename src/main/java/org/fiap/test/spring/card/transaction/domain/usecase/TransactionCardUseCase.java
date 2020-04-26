@@ -33,6 +33,10 @@ public class TransactionCardUseCase {
             this.description = description;
         }
 
+        public TransactionCardPayload(BigDecimal value) {
+            this.value = value;
+        }
+
         public TransactionCardPayload(String uuid) {
             this.uuid = uuid;
         }
@@ -77,7 +81,7 @@ public class TransactionCardUseCase {
         LimitCard currentLimitCard = limitCardService.getCurrentLimitCard(student)
                 .orElseThrow(() -> new LimitCardNotFoundForATransaction("No limit is assigned to the student."));
 
-        transactionCardService.validateTransactionMinimumValue(transactionCardPayload.getValue());
+        transactionCardService.validateTransactionMinimumValue(transactionCardPayload);
 
         TransactionCard debitTransactionCard = TransactionCard.debit(
                 transactionCardPayload.getValue(),

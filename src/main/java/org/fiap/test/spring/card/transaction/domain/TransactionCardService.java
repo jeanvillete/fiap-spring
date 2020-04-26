@@ -7,15 +7,13 @@ import org.fiap.test.spring.card.transaction.domain.usecase.TransactionCardUseCa
 import org.fiap.test.spring.common.exception.InvalidSuppliedDataException;
 import org.fiap.test.spring.student.domain.Student;
 
-import java.math.BigDecimal;
-
 public interface TransactionCardService {
 
     void validateCurrentLimitAllowsTransaction(Student student, LimitCard currentLimitCard, TransactionCard transactionCard) throws LimitCardNotEnoughForTransaction;
 
     TransactionCard insert(TransactionCard debitTransactionCard);
 
-    void validateTransactionMinimumValue(BigDecimal value) throws InvalidSuppliedDataException;
+    void validateTransactionMinimumValue(TransactionCardUseCase.TransactionCardPayload value) throws InvalidSuppliedDataException;
 
     String validateAndExtractTransactionUUID(TransactionCardUseCase.TransactionCardPayload transactionCardToBeChargedBackPayload) throws InvalidSuppliedDataException;
 
