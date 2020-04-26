@@ -2,6 +2,7 @@ package org.fiap.test.spring.card.limit.domain;
 
 import org.assertj.core.api.Assertions;
 import org.fiap.test.spring.common.exception.InvalidSuppliedDataException;
+import org.fiap.test.spring.student.domain.Student;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,8 +28,8 @@ public class LimitCardServiceImplTest {
     public void setUp() throws Exception {
         limitCardService = new LimitCardServiceImpl(limitCardRepository);
 
-        when(limitCardRepository.maxIdByStudentId(1)).thenReturn(10);
-        when(limitCardRepository.maxIdByStudentId(2)).thenReturn(20);
+        when(limitCardRepository.maxIdByStudentId(new Student(1))).thenReturn(10);
+        when(limitCardRepository.maxIdByStudentId(new Student(2))).thenReturn(20);
 
         when(limitCardRepository.findById(10)).thenReturn(Optional.empty());
         when(limitCardRepository.findById(20))
@@ -38,7 +39,7 @@ public class LimitCardServiceImplTest {
                                         123,
                                         LocalDateTime.now(),
                                         new BigDecimal("53.11"),
-                                        987
+                                        new Student(987)
                                 )
                         )
                 );
@@ -65,19 +66,19 @@ public class LimitCardServiceImplTest {
 
     @Test
     public void get_current_limit_card_with_empty_result() {
-        Optional<LimitCard> currentLimitCard = limitCardService.getCurrentLimitCard(1);
+        Optional<LimitCard> currentLimitCard = limitCardService.getCurrentLimitCard(new Student(1));
 
         assertThat(currentLimitCard.isPresent()).isFalse();
     }
 
     @Test
     public void get_current_limit_card_with_valid_result() {
-        Optional<LimitCard> _currentLimitCard = limitCardService.getCurrentLimitCard(2);
+        Optional<LimitCard> _currentLimitCard = limitCardService.getCurrentLimitCard(new Student(2));
 
         LimitCard currentLimitCard = _currentLimitCard.get();
 
         assertThat(currentLimitCard.getId()).isEqualTo(123);
         assertThat(currentLimitCard.getValue()).isEqualTo(new BigDecimal("53.11"));
-        assertThat(currentLimitCard.getStudent()).isEqualTo(987);
+        assertThat(currentLimitCard.getStudent()).isEqualTo(new Student(987));
     }
 }

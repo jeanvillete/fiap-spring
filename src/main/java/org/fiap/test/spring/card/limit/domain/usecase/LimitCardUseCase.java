@@ -49,7 +49,7 @@ public class LimitCardUseCase {
 
         limitCardService.validateMinimumLimitValue(studentLimitCardPayload.getValue());
 
-        this.limitCardService.insert(new LimitCard(studentLimitCardPayload.getValue(), student.getId()));
+        this.limitCardService.insert(new LimitCard(studentLimitCardPayload.getValue(), student));
     }
 
     public StudentLimitCardPayload getCurrentCardLimit(String id) throws InvalidSuppliedDataException, StudentNotFoundException {
@@ -59,7 +59,7 @@ public class LimitCardUseCase {
 
         Student student = studentService.findStudent(studentId.getSubscription(), studentId.getCode());
 
-        Optional<LimitCard> limitCard = limitCardService.getCurrentLimitCard(student.getId());
+        Optional<LimitCard> limitCard = limitCardService.getCurrentLimitCard(student);
 
         return new StudentLimitCardPayload(limitCard.map(LimitCard::getValue).orElse(BigDecimal.ZERO));
     }

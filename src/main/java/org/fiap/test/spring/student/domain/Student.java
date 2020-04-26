@@ -1,6 +1,7 @@
 package org.fiap.test.spring.student.domain;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 public class Student {
@@ -21,6 +22,10 @@ public class Student {
     Student() {
     }
 
+    public Student(Integer id) {
+        this.id = id;
+    }
+
     Student(Integer id, String name, Integer subscription, Integer code) {
         this.id = id;
         this.name = name;
@@ -39,9 +44,12 @@ public class Student {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Student student = (Student) o;
-        return name.equals(student.name) &&
-                subscription.equals(student.subscription) &&
-                code.equals(student.code);
+        return Objects.equals(id, student.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 
     // GETTERS AND SETTERS //

@@ -177,7 +177,7 @@ POST /students/9999999 999-99/card/debit
 }
 
 [response]
-201 Ok
+201 Created
 {
     "uuid": "95963271-48a2-4dbd-abaa-93256de381d4"
 }
@@ -196,7 +196,7 @@ POST /students/9999999 999-99/card/debit
 POST /students/9999999 999-99/card/chargeback/95963271-48a2-4dbd-abaa-93256de381d4
 
 [response]
-201 Ok
+201 Created
 {
     "uuid": "7930f6a6-4589-47dd-a3d2-319b9c5346f8"
 }
@@ -215,7 +215,7 @@ POST /students/9999999 999-99/card/bill-payment
 }
 
 [response]
-201 Ok
+201 Created
 {
     "uuid": "7364259a-94aa-4c37-ad39-5e9837c0fd3e"
 }
@@ -233,7 +233,7 @@ GET /students/9999999 999-99/card/statement/2019-01
 Accept: application/json
 
 [response]
-201 Ok
+200 Ok
 {
     "statement-month": "2019-01"
     "current-limit-value": 100.00,

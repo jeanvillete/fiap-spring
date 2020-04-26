@@ -1,6 +1,7 @@
 package org.fiap.test.spring.card.limit.domain;
 
 import org.fiap.test.spring.common.exception.InvalidSuppliedDataException;
+import org.fiap.test.spring.student.domain.Student;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,11 +34,9 @@ class LimitCardServiceImpl implements LimitCardService {
     }
 
     @Override
-    public Optional<LimitCard> getCurrentLimitCard(Integer studentId) {
+    public Optional<LimitCard> getCurrentLimitCard(Student student) {
         Optional<Integer> highestLimitId = Optional.ofNullable(
-                limitCardRepository.maxIdByStudentId(
-                        studentId
-                )
+                limitCardRepository.maxIdByStudentId(student)
         );
 
         return limitCardRepository.findById(highestLimitId.orElse(0));

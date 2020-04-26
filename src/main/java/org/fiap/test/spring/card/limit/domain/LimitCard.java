@@ -1,5 +1,7 @@
 package org.fiap.test.spring.card.limit.domain;
 
+import org.fiap.test.spring.student.domain.Student;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -17,20 +19,21 @@ public class LimitCard {
     @Column
     private BigDecimal value;
 
-    @Column(name = "student_id")
-    private Integer student;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "student_id")
+    private Student student;
 
     LimitCard() {
     }
 
-    LimitCard(Integer id, LocalDateTime date, BigDecimal value, Integer student) {
+    LimitCard(Integer id, LocalDateTime date, BigDecimal value, Student student) {
         this.id = id;
         this.date = date;
         this.value = value;
         this.student = student;
     }
 
-    public LimitCard(BigDecimal value, Integer student) {
+    public LimitCard(BigDecimal value, Student student) {
         this.date = LocalDateTime.now();
         this.value = value;
         this.student = student;
@@ -60,11 +63,11 @@ public class LimitCard {
         this.value = value;
     }
 
-    public Integer getStudent() {
+    public Student getStudent() {
         return student;
     }
 
-    void setStudent(Integer student) {
+    void setStudent(Student student) {
         this.student = student;
     }
 }

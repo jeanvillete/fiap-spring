@@ -22,7 +22,7 @@ class StudentServiceImpl implements StudentService {
     private final StudentRepository studentRepository;
     private final StudentActuator studentActuator;
 
-    public StudentServiceImpl(StudentRepository studentRepository, StudentActuator studentActuator) {
+    StudentServiceImpl(StudentRepository studentRepository, StudentActuator studentActuator) {
         this.studentRepository = studentRepository;
         this.studentActuator = studentActuator;
     }
