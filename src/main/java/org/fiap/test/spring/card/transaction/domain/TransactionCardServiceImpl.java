@@ -1,12 +1,16 @@
 package org.fiap.test.spring.card.transaction.domain;
 
+import org.codehaus.plexus.util.StringUtils;
 import org.fiap.test.spring.card.limit.domain.LimitCard;
 import org.fiap.test.spring.card.transaction.domain.exception.LimitCardNotEnoughForTransaction;
+import org.fiap.test.spring.card.transaction.domain.exception.TransactionCardToBeChargedBackNotFound;
+import org.fiap.test.spring.card.transaction.domain.usecase.TransactionCardUseCase;
 import org.fiap.test.spring.common.exception.InvalidSuppliedDataException;
 import org.fiap.test.spring.student.domain.Student;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -47,6 +51,26 @@ class TransactionCardServiceImpl implements TransactionCardService {
         if (value.compareTo(BigDecimal.ZERO) != 1) {
             throw new InvalidSuppliedDataException("Argument value must be greater than zero (0)");
         }
+    }
+
+    @Override
+    public String validateAndExtractTransactionUUID(TransactionCardUseCase.TransactionCardPayload transactionCardToBeChargedBackPayload) throws InvalidSuppliedDataException {
+        return Optional.ofNullable(transactionCardToBeChargedBackPayload)
+                .map(TransactionCardUseCase.TransactionCardPayload::getUuid)
+                .filter(Objects::nonNull)
+                .filter(StringUtils::isNotBlank)
+                .filter(uuid -> uuid.length() == 15)
+                .orElseThrow(() -> new InvalidSuppliedDataException("Argument uuid is mandatory, cannot be neither null nor empty/blank."));
+    }
+
+    @Override
+    public TransactionCard retrieveTransactionCardToBeChargedBack(Student student, String transactionUUIDToBeChargedBack) throws TransactionCardToBeChargedBackNotFound {
+        return transactionCardRepository.retrieveTransactionCardToBeChargedBack(student, transactionUUIDToBeChargedBack)
+                .orElseThrow(() ->
+                        new TransactionCardToBeChargedBackNotFound(
+                                "No transaction card was found for the provided student id and transaction uuid."
+                        )
+                );
     }
 
 }

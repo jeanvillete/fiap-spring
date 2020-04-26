@@ -6,6 +6,7 @@ import org.fiap.test.spring.card.transaction.domain.TransactionCard;
 import org.fiap.test.spring.card.transaction.domain.TransactionCardService;
 import org.fiap.test.spring.card.transaction.domain.exception.LimitCardNotEnoughForTransaction;
 import org.fiap.test.spring.card.transaction.domain.exception.LimitCardNotFoundForATransaction;
+import org.fiap.test.spring.card.transaction.domain.exception.TransactionCardToBeChargedBackNotFound;
 import org.fiap.test.spring.common.exception.InvalidSuppliedDataException;
 import org.fiap.test.spring.student.domain.Student;
 import org.fiap.test.spring.student.domain.StudentId;
@@ -32,8 +33,14 @@ public class TransactionCardUseCase {
             this.description = description;
         }
 
-        TransactionCardPayload(String uuid) {
+        public TransactionCardPayload(String uuid) {
             this.uuid = uuid;
+        }
+
+        public TransactionCardPayload(String uuid, BigDecimal value, String description) {
+            this.uuid = uuid;
+            this.value = value;
+            this.description = description;
         }
 
         public String getUuid() {
@@ -83,6 +90,40 @@ public class TransactionCardUseCase {
         TransactionCard createdTransactionCard = transactionCardService.insert(debitTransactionCard);
 
         return new TransactionCardPayload(createdTransactionCard.getUuid());
+    }
+
+    @Transactional
+    public TransactionCardPayload chargeBack(String id, TransactionCardPayload transactionCardToBeChargedBackPayload) throws InvalidSuppliedDataException, StudentNotFoundException, TransactionCardToBeChargedBackNotFound, LimitCardNotFoundForATransaction {
+        StudentId studentId = studentService.parseStudentId(id);
+
+        studentService.ensureStudentIsFound(studentId.getSubscription(), studentId.getCode());
+
+        Student student = studentService.findStudent(studentId.getSubscription(), studentId.getCode());
+
+        LimitCard currentLimitCard = limitCardService.getCurrentLimitCard(student)
+                .orElseThrow(() -> new LimitCardNotFoundForATransaction("No limit is assigned to the student."));
+
+        String transactionUUIDToBeChargedBack = transactionCardService.validateAndExtractTransactionUUID(transactionCardToBeChargedBackPayload);
+
+        TransactionCard transactionCardToBeChargedBack = transactionCardService.retrieveTransactionCardToBeChargedBack(student, transactionUUIDToBeChargedBack);
+
+        TransactionCard transactionCardChargeBack = transactionCardService.insert(
+                TransactionCard.chargeBack(
+                        transactionCardToBeChargedBack.getValue().multiply(new BigDecimal(-1)),
+                        String.format(
+                                "Charging Back Transaction with value %s and identified by %s",
+                                transactionCardToBeChargedBack.getValue().toString(),
+                                transactionCardToBeChargedBack.getUuid()
+                        ),
+                        currentLimitCard
+                )
+        );
+
+        return new TransactionCardPayload(
+                transactionCardChargeBack.getUuid(),
+                transactionCardChargeBack.getValue(),
+                transactionCardChargeBack.getDescription()
+        );
     }
 
 }

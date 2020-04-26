@@ -44,6 +44,10 @@ public class TransactionCard {
         return new TransactionCard(value, description, currentLimitCard);
     }
 
+    public static TransactionCard chargeBack(BigDecimal value, String description, LimitCard currentLimitCard) {
+        return new TransactionCard(value, description, currentLimitCard);
+    }
+
     TransactionCard generateUUID() {
         this.uuid = UUID.randomUUID().toString().substring(0, 15);
 

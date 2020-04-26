@@ -2,6 +2,7 @@ package org.fiap.test.spring.common.application;
 
 import org.fiap.test.spring.card.transaction.domain.exception.LimitCardNotEnoughForTransaction;
 import org.fiap.test.spring.card.transaction.domain.exception.LimitCardNotFoundForATransaction;
+import org.fiap.test.spring.card.transaction.domain.exception.TransactionCardToBeChargedBackNotFound;
 import org.fiap.test.spring.common.exception.InvalidSuppliedDataException;
 import org.fiap.test.spring.student.domain.exception.StudentNameConflictException;
 import org.fiap.test.spring.student.domain.exception.StudentNotFoundException;
@@ -26,7 +27,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
         return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
 
-    @ExceptionHandler(value = {StudentNotFoundException.class})
+    @ExceptionHandler(value = {StudentNotFoundException.class, TransactionCardToBeChargedBackNotFound.class})
     protected ResponseEntity<Object> handleNotFound(Exception ex, WebRequest request) {
         return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(), HttpStatus.NOT_FOUND, request);
     }

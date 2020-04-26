@@ -3,6 +3,7 @@ package org.fiap.test.spring.card.transaction.domain;
 import org.assertj.core.api.Assertions;
 import org.fiap.test.spring.card.limit.domain.LimitCard;
 import org.fiap.test.spring.card.transaction.domain.exception.LimitCardNotEnoughForTransaction;
+import org.fiap.test.spring.card.transaction.domain.usecase.TransactionCardUseCase;
 import org.fiap.test.spring.common.exception.InvalidSuppliedDataException;
 import org.fiap.test.spring.student.domain.Student;
 import org.junit.Before;
@@ -14,7 +15,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import java.math.BigDecimal;
 import java.util.Optional;
 
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class TransactionCardServiceImplTest {
@@ -71,5 +72,50 @@ public class TransactionCardServiceImplTest {
     @Test
     public void check_valid_positive_minimum_transaction_value() throws InvalidSuppliedDataException {
         transactionCardService.validateTransactionMinimumValue(new BigDecimal("1"));
+    }
+
+    @Test(expected = InvalidSuppliedDataException.class)
+    public void invoke_transaction_charge_back_with_null_instance() throws InvalidSuppliedDataException {
+        transactionCardService.validateAndExtractTransactionUUID(null);
+    }
+
+    @Test(expected = InvalidSuppliedDataException.class)
+    public void invoke_transaction_charge_back_with_null_uuid_data() throws InvalidSuppliedDataException {
+        transactionCardService.validateAndExtractTransactionUUID(new TransactionCardUseCase.TransactionCardPayload(null));
+    }
+
+    @Test(expected = InvalidSuppliedDataException.class)
+    public void invoke_transaction_charge_back_with_empty_uuid_data() throws InvalidSuppliedDataException {
+        transactionCardService.validateAndExtractTransactionUUID(new TransactionCardUseCase.TransactionCardPayload(""));
+
+    }
+
+    @Test(expected = InvalidSuppliedDataException.class)
+    public void invoke_transaction_charge_back_with_blank_uuid_data() throws InvalidSuppliedDataException {
+        transactionCardService.validateAndExtractTransactionUUID(new TransactionCardUseCase.TransactionCardPayload(" "));
+    }
+
+    @Test(expected = InvalidSuppliedDataException.class)
+    public void invoke_transaction_charge_back_with_uuid_data_shorter_than_15_chars() throws InvalidSuppliedDataException {
+        transactionCardService.validateAndExtractTransactionUUID(new TransactionCardUseCase.TransactionCardPayload("7930f6a6-4589"));
+    }
+
+    @Test
+    public void invoke_transaction_charge_back_with_valid_uuid_data() throws InvalidSuppliedDataException {
+        transactionCardService.validateAndExtractTransactionUUID(new TransactionCardUseCase.TransactionCardPayload("7930f6a6-4589-4"));
+    }
+
+    @Test
+    public void ensure_proper_methods_are_invoked_on_insert() {
+        // given
+        TransactionCard mockedToBeInferredTransactionCard = mock(TransactionCard.class);
+        when(mockedToBeInferredTransactionCard.generateUUID()).thenReturn(mockedToBeInferredTransactionCard);
+
+        // when
+        transactionCardService.insert(mockedToBeInferredTransactionCard);
+
+        // then
+        verify(mockedToBeInferredTransactionCard, times(1)).generateUUID();
+        verify(transactionCardRepository, times(1)).save(mockedToBeInferredTransactionCard);
     }
 }
