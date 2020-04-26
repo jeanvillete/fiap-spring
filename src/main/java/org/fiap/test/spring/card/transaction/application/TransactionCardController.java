@@ -7,7 +7,10 @@ import org.fiap.test.spring.card.transaction.domain.usecase.TransactionCardUseCa
 import org.fiap.test.spring.common.exception.InvalidSuppliedDataException;
 import org.fiap.test.spring.student.domain.exception.StudentNotFoundException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.YearMonth;
 
 @RestController
 @RequestMapping("students/{id}/card")
@@ -63,6 +66,30 @@ public class TransactionCardController {
             LimitCardNotFoundForATransaction {
 
         return transactionCardUseCase.billPayment(id, paymentBillTransactionCard);
+    }
+
+    @GetMapping(value = "statement/{statementMonth}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public TransactionCardUseCase.TransactionCardStatementPayload jsonStatementTransactions(
+            @PathVariable String id,
+            @PathVariable YearMonth statementMonth
+    ) throws
+            InvalidSuppliedDataException,
+            StudentNotFoundException,
+            LimitCardNotFoundForATransaction {
+
+        return transactionCardUseCase.loadStatementForAGivenMonth(id, statementMonth);
+    }
+
+    @GetMapping(value = "statement/{statementMonth}", produces = MediaType.TEXT_PLAIN_VALUE)
+    public String stringStatementTransactions(
+            @PathVariable String id,
+            @PathVariable YearMonth statementMonth
+    ) throws
+            InvalidSuppliedDataException,
+            StudentNotFoundException,
+            LimitCardNotFoundForATransaction {
+
+        return transactionCardUseCase.loadFormattedStringStatementForAGivenMonth(id, statementMonth);
     }
 
 }

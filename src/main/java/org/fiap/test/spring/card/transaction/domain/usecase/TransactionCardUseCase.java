@@ -16,6 +16,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.time.YearMonth;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class TransactionCardUseCase {
@@ -24,6 +28,7 @@ public class TransactionCardUseCase {
         String uuid;
         BigDecimal value;
         String description;
+        LocalDateTime date;
 
         TransactionCardPayload() {
         }
@@ -47,6 +52,13 @@ public class TransactionCardUseCase {
             this.description = description;
         }
 
+        public TransactionCardPayload(TransactionCard transactionCard) {
+            this.uuid = transactionCard.getUuid();
+            this.value = transactionCard.getValue();
+            this.description = transactionCard.getDescription();
+            this.date = transactionCard.getDate();
+        }
+
         public String getUuid() {
             return uuid;
         }
@@ -57,6 +69,44 @@ public class TransactionCardUseCase {
 
         public String getDescription() {
             return description;
+        }
+
+        public LocalDateTime getDate() {
+            return date;
+        }
+    }
+
+    public static class TransactionCardStatementPayload {
+        YearMonth statementMonth;
+        BigDecimal currentLimitValue;
+        BigDecimal monthBalance;
+        List<TransactionCardPayload> transactions;
+
+        public TransactionCardStatementPayload(YearMonth statementMonth) {
+            this.statementMonth = statementMonth;
+        }
+
+        public TransactionCardStatementPayload(YearMonth statementMonth, BigDecimal currentLimitValue, BigDecimal monthBalance, List<TransactionCardPayload> transactions) {
+            this.statementMonth = statementMonth;
+            this.currentLimitValue = currentLimitValue;
+            this.monthBalance = monthBalance;
+            this.transactions = transactions;
+        }
+
+        public YearMonth getStatementMonth() {
+            return statementMonth;
+        }
+
+        public BigDecimal getCurrentLimitValue() {
+            return currentLimitValue;
+        }
+
+        public BigDecimal getMonthBalance() {
+            return monthBalance;
+        }
+
+        public List<TransactionCardPayload> getTransactions() {
+            return transactions;
         }
     }
 
@@ -159,4 +209,43 @@ public class TransactionCardUseCase {
                 transactionCardBillPayment.getDescription()
         );
     }
+
+    public TransactionCardStatementPayload loadStatementForAGivenMonth(String id, YearMonth statementMonth) throws InvalidSuppliedDataException, StudentNotFoundException, LimitCardNotFoundForATransaction {
+        StudentId studentId = studentService.parseStudentId(id);
+
+        studentService.ensureStudentIsFound(studentId.getSubscription(), studentId.getCode());
+
+        Student student = studentService.findStudent(studentId.getSubscription(), studentId.getCode());
+
+        BigDecimal currentLimitCard = limitCardService.getCurrentLimitCard(student)
+                .map(LimitCard::getValue)
+                .orElse(BigDecimal.ZERO);
+
+        BigDecimal monthBalance = transactionCardService.retrieveBalanceByMonth(student, statementMonth);
+
+        List<TransactionCard> transactions = transactionCardService.retrieveStatementByMonth(student, statementMonth);
+
+        List<TransactionCardPayload> transactionCardPayloadListForStatement = transactions.stream()
+                .map(TransactionCardPayload::new)
+                .collect(Collectors.toList());
+
+        return new TransactionCardStatementPayload(
+                statementMonth,
+                currentLimitCard,
+                monthBalance,
+                transactionCardPayloadListForStatement
+        );
+    }
+
+    public String loadFormattedStringStatementForAGivenMonth(String id, YearMonth statementMonth) throws InvalidSuppliedDataException, StudentNotFoundException, LimitCardNotFoundForATransaction {
+        TransactionCardStatementPayload loadStatementForAGivenMonth = loadStatementForAGivenMonth(id, statementMonth);
+
+        return transactionCardService.formatStringStatementForAGivenMonth(
+                loadStatementForAGivenMonth.getStatementMonth(),
+                loadStatementForAGivenMonth.getTransactions(),
+                loadStatementForAGivenMonth.getCurrentLimitValue(),
+                loadStatementForAGivenMonth.getMonthBalance()
+        );
+    }
+
 }

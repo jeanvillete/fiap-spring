@@ -223,7 +223,7 @@ POST /students/9999999 999-99/card/bill-payment
 
 ##### calcula extrato para um determinado mês; [issue #9](https://github.com/jeanvillete/fiap-spring/issues/9)
  - para o calculo do extrato de um mês específico, deve-se obter todas as transações até este mês em questão, e calcular o saldo deste mês
- - o mês e ano que se procura o extrato deve ser informado ambos via ***path variable***
+ - o mês e ano que se procura o extrato deve ser informado ambos via ***path variable***, seguindo o formato ***YYYY-MM***
  - caso a identificação seja inválida ou não existir um registro para a mesma, devolver ***404 Not Found***
  - o header Accept deve ser fornecido pare decisão do retorno como json estruturado ou texto formatado.
 

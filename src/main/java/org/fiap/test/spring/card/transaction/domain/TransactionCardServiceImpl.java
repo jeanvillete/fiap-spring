@@ -10,6 +10,11 @@ import org.fiap.test.spring.student.domain.Student;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.YearMonth;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -71,6 +76,60 @@ class TransactionCardServiceImpl implements TransactionCardService {
                                 "No transaction card was found for the provided student id and transaction uuid."
                         )
                 );
+    }
+
+    private LocalDateTime veryLastTimeForStatementMonth(YearMonth statementMonth) {
+        return LocalDateTime.of(statementMonth.atEndOfMonth(), LocalTime.MAX);
+    }
+
+    private LocalDateTime veryFirstTimeWithinForStatementMonth(YearMonth statementMonth) {
+        return LocalDateTime.of(statementMonth.atDay(1), LocalTime.MIN);
+    }
+
+    @Override
+    public BigDecimal retrieveBalanceByMonth(Student student, YearMonth statementMonth) {
+        LocalDateTime veryLastTimeForStatementMonth = veryLastTimeForStatementMonth(statementMonth);
+
+        return transactionCardRepository.balance(student, veryLastTimeForStatementMonth)
+            .orElse(BigDecimal.ZERO);
+    }
+
+    @Override
+    public List<TransactionCard> retrieveStatementByMonth(Student student, YearMonth statementMonth) {
+        LocalDateTime firstTimeWithinForStatementMonth = veryFirstTimeWithinForStatementMonth(statementMonth);
+        LocalDateTime lastTimeForStatementMonth = veryLastTimeForStatementMonth(statementMonth);
+
+        return transactionCardRepository.findByDateBetweenOrderByDate(firstTimeWithinForStatementMonth, lastTimeForStatementMonth)
+                .orElse(Collections.EMPTY_LIST);
+    }
+
+    @Override
+    public String formatStringStatementForAGivenMonth(YearMonth statementMonth, List<TransactionCardUseCase.TransactionCardPayload> transactions, BigDecimal currentLimitValue, BigDecimal monthBalance) {
+        StringBuilder content = new StringBuilder();
+
+        content.append("\n");
+        content.append("statement year month     " + statementMonth);
+        content.append("\n");
+
+        transactions
+                .forEach(transactionCardPayload -> {
+                    content.append("\n");
+                    content.append(transactionCardPayload.getDate() + " " + transactionCardPayload.getUuid());
+                    content.append("\n");
+                    content.append("value                    " + transactionCardPayload.getValue());
+                    content.append("\n");
+                    content.append("description              " + Optional.ofNullable(transactionCardPayload.getDescription()).orElse("-"));
+                    content.append("\n");
+                });
+
+        content.append("\n");
+        content.append("current limit            " + currentLimitValue);
+        content.append("\n");
+
+        content.append("\n");
+        content.append("month balance            " + monthBalance);
+
+        return content.toString();
     }
 
 }
