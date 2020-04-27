@@ -1,7 +1,7 @@
 # intro
 
-O projeto corrente atende o trabalho de gerenciamento de transações de um cartão de crédito fictício, desenvolvido dentro da faculdade.
-O trabalho atende a matéria de Spring lecionada no curso de MBA, que tem o objetivo de apresentar possibilidades com o framework Spring Boot.
+O projeto corrente atende o trabalho de gerenciamento de transações de um cartão de crédito fictício, desenvolvido dentro da faculdade.  
+O trabalho atende a matéria de Spring lecionada no curso de MBA, que tem o objetivo de apresentar possibilidades com o framework Spring Boot.  
 
 ###### Escola: FIAP
 ###### Curso: MBA FULLSTACK DEVELOPER, MICROSERVICES, CLOUD & IoT  
