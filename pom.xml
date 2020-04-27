@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>org.fiap.test</groupId>
 	<artifactId>fiap.spring</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.1-RELEASE</version>
 	<name>fiap.spring</name>
 	<description>Trabalho MBA FIAP; Spring</description>
 
@@ -96,5 +96,13 @@
 			</plugin>
 		</plugins>
 	</build>
+
+	<distributionManagement>
+		<repository>
+			<id>github</id>
+			<name>jeanvillete</name>
+			<url>https://maven.pkg.github.com/jeanvillete/fiap-spring</url>
+		</repository>
+	</distributionManagement>
 
 </project>
