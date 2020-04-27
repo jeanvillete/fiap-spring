@@ -16,10 +16,17 @@ As atividades levantadas para serem desenvolvidas de acordo com cada ***caso de 
 # instrução de execução
 
 ### a partir do binário; download e execução do jar empacotado
-***TBD***
+Uma das opções é o download do **jar** já empacotado, o que dispensaria a necessidade de utilizaçã de ferramentas para build do código fonte.  
+Necessário fazer download da versão corrente disponível em; [fiap.spring-0.0.1-RELEASE.jar](https://github.com/jeanvillete/fiap-spring/packages/200965)  
+Após o download, invocar comando abaixo via terminal;  
+
+`$ java -jar fiap.spring-0.0.1-RELEASE.jar`
 
 ### a partir do código fonte; clone e build/empacotamento do projeto
-***TBD***
+Após efetuar o checkout do código, utilize o comando abaixo para excução da aplicação.  
+**NOTA:** Requisitos, maven e Java 8.  
+
+`$ mvn spring-boot:run`
 
 ---
 
